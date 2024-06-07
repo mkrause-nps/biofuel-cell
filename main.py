@@ -37,7 +37,8 @@ def main():
         data = Plotter.create_data_structure_for_plotting(
             grouped=grouped, y_column_name="percent_cleared"
         )
-        Plotter.simple_plot(data=data)
+        Plotter.simple_plot(data=data, group_name=prot.name)
+        Plotter.save_figure(data_path_dir=Ingest.get_user_data_dir_path(), fig_name=prot.name)
 
 
 if __name__ == "__main__":

@@ -1,19 +1,24 @@
 #!/usr/bin/env python3
+import os
+
 import pandas as pd
 import matplotlib.pyplot as plt
 
 
 class Plotter(object):
 
-    @staticmethod
-    def simple_plot(data: dict) -> None:
-        fig, ax = plt.subplots()
+    fig: plt.Figure = None
+
+    @classmethod
+    def simple_plot(cls, data: dict, group_name: str=None) -> None:
+        cls.fig, ax = plt.subplots()
         for key, val in data.items():
             x = val["x"]
             y = val["y"]
             ax.scatter(x, y, label=key)
 
-        # ax.set_title(data[])
+        if group_name:
+            ax.set_title(group_name)
         ax.set_xlabel("Chip Section")
         ax.set_ylabel("% cleared")
 
@@ -29,6 +34,7 @@ class Plotter(object):
     def create_data_structure_for_plotting(
         grouped: pd.DataFrame.groupby, y_column_name: str
     ) -> dict:
+        """Returns a data structure that makes it convenient for plotting."""
         data: dict[str, dict] = {}
         for x_column_name, group in grouped:
             data[x_column_name] = {
@@ -37,3 +43,10 @@ class Plotter(object):
             }
 
         return data
+
+    @classmethod
+    def save_figure(cls, data_path_dir: str, fig_name: str=None, fig_format: str='png') -> None:
+        fig_name = f'{fig_name}.{fig_format}'
+        fig_path = os.path.join(data_path_dir, fig_name)
+        print(f'Saving figure to {fig_path}')
+        cls.fig.savefig(fig_path, format=fig_format)
