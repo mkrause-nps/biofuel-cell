@@ -20,7 +20,7 @@ class Ingest(object):
     @classmethod
     def get_excel_filename(cls) -> str:
         """Returns absolute path to Excel file."""
-        #cls.config.read(cls.config_file)
+        # cls.config.read(cls.config_file)
         cls._read_config()
         return cls.config["Constants"]["excel_file"]
 
@@ -28,7 +28,6 @@ class Ingest(object):
     def get_user_data_dir_path(cls) -> str:
         cls._read_config()
         return os.path.join(cls.home, cls.config["Constants"]["data_path"])
-
 
     @classmethod
     def read_data_from_excel(cls, filename: str) -> pd.DataFrame:
