@@ -17,6 +17,10 @@ class _Utility(object):
         cls.config.read(cls.config_file)
         return cls.config
 
+    @classmethod
+    def get_user_data_dir_path(cls) -> str:
+        return os.path.join(cls.home, cls.config["Constants"]["data_path"])
+
     @staticmethod
     def remove_whitespace_from_pd_header(columns: pd.DataFrame.columns) -> pd.DataFrame:
         return columns.str.replace(" ", "")

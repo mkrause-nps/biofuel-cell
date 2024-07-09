@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import os
+from typing import Union
+
 import pandas as pd
 from src.utility import _Utility
 
@@ -18,14 +20,12 @@ class Ingest(object):
         return cls.config["Constants"]["excel_file"]
 
     @classmethod
-    def get_user_data_dir_path(cls) -> str:
-        return os.path.join(cls.HOME, cls.config["Constants"]["data_path"])
-
-    @classmethod
-    def read_data_from_excel(cls, filename: str) -> pd.DataFrame:
+    def read_data_from_excel(cls, filename: Union[str | None]) -> pd.DataFrame:
         """Reads data from a specific sheet in Excel file."""
         sheet_name = cls.config["Constants"]["sheet_name"]
-        filename = os.path.join(cls.get_user_data_dir_path(), filename)
+        if filename is None:
+            filename = cls.get_excel_filename()
+        filename = os.path.join(_Utility.get_user_data_dir_path(), filename)
         return pd.read_excel(filename, sheet_name=sheet_name)
 
     @classmethod
