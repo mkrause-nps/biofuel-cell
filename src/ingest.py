@@ -1,33 +1,25 @@
 #!/usr/bin/env python3
 
 import os
-import configparser
 import pandas as pd
+from src.utility import _Utility
 
 
 class Ingest(object):
-    """Utility class to ingest data into a dataframe."""
+    """Provides methods to ingest data into a dataframe."""
 
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    home = os.path.expanduser("~")
-    config_file = os.path.join(script_dir, "..", "config.ini")
-    config = configparser.ConfigParser()
-
-    @classmethod
-    def _read_config(cls):
-        cls.config.read(cls.config_file)
+    # Class variables:
+    config = _Utility().read_config()
+    HOME = _Utility.home
 
     @classmethod
     def get_excel_filename(cls) -> str:
         """Returns absolute path to Excel file."""
-        # cls.config.read(cls.config_file)
-        cls._read_config()
         return cls.config["Constants"]["excel_file"]
 
     @classmethod
     def get_user_data_dir_path(cls) -> str:
-        cls._read_config()
-        return os.path.join(cls.home, cls.config["Constants"]["data_path"])
+        return os.path.join(cls.HOME, cls.config["Constants"]["data_path"])
 
     @classmethod
     def read_data_from_excel(cls, filename: str) -> pd.DataFrame:
