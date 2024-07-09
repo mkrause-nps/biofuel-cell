@@ -9,8 +9,7 @@ from src.plotter import Plotter
 
 def main():
 
-    excel_filename = Ingest.get_excel_filename()
-    df: pd.DataFrame = Ingest.read_data_from_excel(filename=excel_filename)
+    df: pd.DataFrame = Ingest.read_data_from_excel()
     df.columns = _Utility.remove_whitespace_from_pd_header(df.columns)
     df.columns = _Utility.remove_undesired_symbols_from_pd_header(df.columns)
     # print(df.head())
@@ -39,7 +38,7 @@ def main():
         )
         Plotter.simple_plot(data=data, group_name=prot.name)
         Plotter.save_figure(
-            data_path_dir=Ingest.get_user_data_dir_path(), fig_name=prot.name
+            data_path_dir=_Utility.get_user_data_dir_path(), fig_name=prot.name
         )
 
 
