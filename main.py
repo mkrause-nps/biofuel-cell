@@ -3,7 +3,7 @@
 import pandas as pd
 from src.clearanceprotocol import ClearanceProtocol
 from src.ingest import Ingest
-from src.utility import Utility
+from src.utility import _Utility
 from src.plotter import Plotter
 
 
@@ -11,8 +11,8 @@ def main():
 
     excel_filename = Ingest.get_excel_filename()
     df: pd.DataFrame = Ingest.read_data_from_excel(filename=excel_filename)
-    df.columns = Utility.remove_whitespace_from_pd_header(df.columns)
-    df.columns = Utility.remove_undesired_symbols_from_pd_header(df.columns)
+    df.columns = _Utility.remove_whitespace_from_pd_header(df.columns)
+    df.columns = _Utility.remove_undesired_symbols_from_pd_header(df.columns)
     # print(df.head())
 
     clearance_protocols = []
