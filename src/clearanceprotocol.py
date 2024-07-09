@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 import pandas as pd
 
+
 @dataclass
 class ClearanceProtocol:
     protocol_id: int
