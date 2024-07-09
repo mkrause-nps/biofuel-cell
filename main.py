@@ -9,7 +9,7 @@ from src.plotter import Plotter
 
 def main():
 
-    df: pd.DataFrame = Ingest.read_data_from_excel()
+    df: pd.DataFrame = Ingest.read_data_from_excel(filename=None)
     df.columns = _Utility.remove_whitespace_from_pd_header(df.columns)
     df.columns = _Utility.remove_undesired_symbols_from_pd_header(df.columns)
     # print(df.head())

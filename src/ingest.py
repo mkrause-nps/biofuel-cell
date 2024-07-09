@@ -2,7 +2,6 @@
 
 import os
 from typing import Union
-
 import pandas as pd
 from src.utility import _Utility
 
@@ -11,7 +10,7 @@ class Ingest(object):
     """Provides methods to ingest data into a dataframe."""
 
     # Class variables:
-    config = _Utility().read_config()
+    config = _Utility.get_config()
     HOME = _Utility.home
 
     @classmethod
