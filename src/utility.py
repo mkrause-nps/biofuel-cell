@@ -27,6 +27,30 @@ class _Utility(object):
 
     @staticmethod
     def remove_undesired_symbols_from_pd_header(
-        columns: pd.DataFrame.columns,
+            columns: pd.DataFrame.columns,
     ) -> pd.DataFrame:
         return columns.str.replace("%", "percent_")
+
+    @staticmethod
+    def remove_outliers(group: pd.Series, dataset_name: str) -> pd.Series:
+        """If a number is not between the first and third quartiles, remove the outlier."""
+        q1: float = group.quantile(0.25)
+        q3: float = group.quantile(0.75)
+        iqr: float = q3 - q1
+        # Outlier criterion
+        outliers: pd.Series[bool] = (group < (q1 - 1.5 * iqr)) | (group > (q3 + 1.5 * iqr))
+        if any(outliers):
+            print(f'Found {outliers.sum()} outliers in {dataset_name} {group.name}!')
+        return group[~outliers]
+
+    @staticmethod
+    def get_filename_only(filename: str) -> str:
+        return filename.split('.')[0]
+
+    @staticmethod
+    def put_value_in_row(row: pd.Series, condition_column_name: str, condition: str, value: int,
+                         alt_value: int) -> int:
+        """Return one of two integers, depending on a value in same record but different column."""
+        if row[condition_column_name] != condition:
+            return alt_value
+        return value
