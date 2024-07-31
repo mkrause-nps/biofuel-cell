@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import configparser
 import os
+from pathlib import Path
 import pandas as pd
 
 
@@ -54,3 +55,24 @@ class _Utility(object):
         if row[condition_column_name] != condition:
             return alt_value
         return value
+
+    @staticmethod
+    def path_exists(path: Path) -> bool:
+        """ Check if a path exists."""
+        if path.exists():
+            return True
+        return False
+
+    @staticmethod
+    def dir_exists(path: Path) -> bool:
+        """Check if a directory exists."""
+        if path.is_dir():
+            return True
+        return False
+
+    @staticmethod
+    def file_exists(path: Path) -> bool:
+        """Check if a file exists."""
+        if path.is_file():
+            return True
+        return False
