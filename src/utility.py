@@ -57,6 +57,10 @@ class _Utility(object):
         return value
 
     @staticmethod
+    def is_absolute_path(path: str) -> bool:
+        return Path(path).is_absolute()
+
+    @staticmethod
     def path_exists(path: Path) -> bool:
         """ Check if a path exists."""
         if path.exists():
