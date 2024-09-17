@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import os
 from typing import Tuple
-
 import numpy as np
 import pandas as pd
 from src.i_spreadsheet import ISpreadsheet
@@ -29,7 +28,7 @@ class Spreadsheet(ISpreadsheet):
     def sheet_names(self, sheet_names: tuple):
         raise AttributeError('sheet_names attribute is read-only')
 
-    def get_averages(self, tab_name: str='Sheet1') -> pd.DataFrame:
+    def _ISpreadsheet__get_averages(self, tab_name: str= 'Sheet1') -> pd.DataFrame:
         """Return a dataframe containing averages for each experiment in sheet."""
         if not self.__is_tab_name_in_file(tab_name=tab_name):
             raise ValueError(f'tab name {tab_name} is not file {self.excel_filename}')
@@ -37,7 +36,7 @@ class Spreadsheet(ISpreadsheet):
         column_names = self.__get_column_names(df=df)
         return df.groupby(column_names[0])[column_names[2]].mean().reset_index()
 
-    def get_stdevs(self, tab_name: str='Sheet1') -> pd.DataFrame:
+    def _ISpreadsheet__get_stdevs(self, tab_name: str= 'Sheet1') -> pd.DataFrame:
         """Return a dataframe containing standard deviations for each experiment in sheet."""
         if not self.__is_tab_name_in_file(tab_name=tab_name):
             raise ValueError(f'tab name {tab_name} is not file {self.excel_filename}')
@@ -53,18 +52,16 @@ class Spreadsheet(ISpreadsheet):
         temp_df = df.groupby(column_names[0])[column_names[1]].count().reset_index()
         return temp_df[column_names[1]].to_numpy()
 
-    def get_average_of_averages(self, tab_name: str='Sheet1') -> Tuple[np.ndarray, np.ndarray]:
-        averages: np.ndarray = self.__get_column_values(df=self.get_averages(tab_name=tab_name))
-        stdevs: np.ndarray = self.__get_column_values(df=self.get_stdevs(tab_name=tab_name))
-
+    def get_average_of_averages(self, tab_name: str='Sheet1') -> Tuple[float, float]:
+        averages: np.ndarray = self.__get_column_values(df=self._ISpreadsheet__get_averages(tab_name=tab_name))
+        stdevs: np.ndarray = self.__get_column_values(df=self._ISpreadsheet__get_stdevs(tab_name=tab_name))
         num_observations: np.ndarray = self.get_num_observations(tab_name=tab_name)
 
         weighted_means = self.__get_weighted_mean(averages=averages, num_observations=num_observations)
         variance = np.sum(num_observations * (stdevs**2 + (averages - weighted_means)**2)) / np.sum(num_observations)
         std_dev_of_averages = (np.sqrt(variance))
 
-        return weighted_means, std_dev_of_averages
-
+        return weighted_means.item(), std_dev_of_averages.item()
 
     @staticmethod
     def __get_weighted_mean(averages: np.ndarray, num_observations: np.ndarray) -> np.ndarray:
@@ -83,4 +80,3 @@ class Spreadsheet(ISpreadsheet):
 
     def __str__(self):
         return f"Spreadsheet instance: {self.__excel_filename}"
-
