@@ -68,8 +68,8 @@ class Spreadsheet(ISpreadsheet):
         return np.sum(num_observations * averages) / np.sum(num_observations)
 
     def __get_column_values(self, df: pd.DataFrame) -> np.ndarray:
-        colum_name = self.__get_column_names(df=df)[1]
-        return df[colum_name].to_numpy()
+        column_name = self.__get_column_names(df=df)[1]
+        return df[column_name].to_numpy()
 
     @staticmethod
     def __get_column_names(df: pd.DataFrame) -> tuple:
