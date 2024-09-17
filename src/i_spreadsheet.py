@@ -10,10 +10,6 @@ class ISpreadsheet(ABC):
         pass
 
     @abstractmethod
-    def get_average_of_averages(self, tab_name: str='Sheet1') -> Tuple[float, float]:
-        pass
-
-    @abstractmethod
     def _get_averages(self, tab: str= 'Sheet1') -> float:
         pass
 
