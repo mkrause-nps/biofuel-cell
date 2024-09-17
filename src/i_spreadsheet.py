@@ -14,11 +14,11 @@ class ISpreadsheet(ABC):
         pass
 
     @abstractmethod
-    def __get_averages(self, tab: str= 'Sheet1') -> float:
+    def _get_averages(self, tab: str= 'Sheet1') -> float:
         pass
 
     @abstractmethod
-    def __get_stdevs(self, tab: str= 'Sheet1') -> float:
+    def _get_stdevs(self, tab: str= 'Sheet1') -> float:
         pass
 
     @abstractmethod

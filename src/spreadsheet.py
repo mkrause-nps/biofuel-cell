@@ -8,7 +8,7 @@ from src.i_spreadsheet import ISpreadsheet
 
 class Spreadsheet(ISpreadsheet):
 
-    NUMBER_OF_SAMPLES: int = 100
+    NUMBER_OF_SAMPLES: int = 100  # samples taken by the multimeter to produce an average value
 
     def __init__(self, excel_filename: str):
         self.__excel_filename = os.path.abspath(excel_filename)
@@ -31,7 +31,7 @@ class Spreadsheet(ISpreadsheet):
     def sheet_names(self, sheet_names: tuple):
         raise AttributeError('sheet_names attribute is read-only')
 
-    def _ISpreadsheet__get_averages(self, tab_name: str= 'Sheet1') -> pd.DataFrame:
+    def _get_averages(self, tab_name: str= 'Sheet1') -> pd.DataFrame:
         """Return a dataframe containing averages for each experiment in sheet."""
         if not self.__is_tab_name_in_file(tab_name=tab_name):
             raise ValueError(f'tab name {tab_name} is not file {self.excel_filename}')
@@ -39,7 +39,7 @@ class Spreadsheet(ISpreadsheet):
         column_names = self.__get_column_names(df=df)
         return df.groupby(column_names[0])[column_names[2]].mean().reset_index()
 
-    def _ISpreadsheet__get_stdevs(self, tab_name: str= 'Sheet1') -> pd.DataFrame:
+    def _get_stdevs(self, tab_name: str= 'Sheet1') -> pd.DataFrame:
         """Return a dataframe containing standard deviations for each experiment in sheet."""
         if not self.__is_tab_name_in_file(tab_name=tab_name):
             raise ValueError(f'tab name {tab_name} is not file {self.excel_filename}')
@@ -57,8 +57,8 @@ class Spreadsheet(ISpreadsheet):
         # return np.array([100] * 3)   # that's all we need here, figure out how to get to the 3
 
     def get_average_of_averages(self, tab_name: str='Sheet1') -> Tuple[float, float]:
-        averages: np.ndarray = self.__get_column_values(df=self._ISpreadsheet__get_averages(tab_name=tab_name))
-        stdevs: np.ndarray = self.__get_column_values(df=self._ISpreadsheet__get_stdevs(tab_name=tab_name))
+        averages: np.ndarray = self.__get_column_values(df=self._get_averages(tab_name=tab_name))
+        stdevs: np.ndarray = self.__get_column_values(df=self._get_stdevs(tab_name=tab_name))
         num_observations: np.ndarray = self.get_num_observations(tab_name=tab_name)
 
         weighted_means = self.__get_weighted_mean(averages=averages, num_observations=num_observations)
