@@ -45,7 +45,6 @@ class MyTestCase(unittest.TestCase):
         expected = pd.DataFrame(expected)
         pd.testing.assert_frame_equal(averages, expected)
 
-
     def test_get_stdevs_easy(self):
         spreadsheet = Spreadsheet(self.excel_filename)
         stdevs = spreadsheet._get_stdevs(tab_name='tab_00')

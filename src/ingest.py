@@ -24,7 +24,9 @@ class Ingest(object):
         return tuple(excel_file.sheet_names)
 
     @classmethod
-    def read_data_from_excel(cls, filename: Union[str | None], sheet_name: Union[str | None]=None) -> pd.DataFrame:
+    def read_data_from_excel(
+        cls, filename: Union[str | None], sheet_name: Union[str | None] = None
+    ) -> pd.DataFrame:
         """Reads data from a specific sheet in Excel file."""
         if not sheet_name:
             sheet_name = cls.config["Constants"]["sheet_name"]

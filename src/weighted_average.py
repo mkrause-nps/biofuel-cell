@@ -18,23 +18,37 @@ class WeightedAverage(object):
         experiment_ids: str = self.column_names[0]
         values: str = self.column_names[2]
         std_dev: str = self.column_names[3]
-        grouped_stats = self.df.groupby(experiment_ids).apply(
-            lambda x: pd.Series(self.weighted_stats(x[values], x[std_dev], self.num_obs))).reset_index()
-        grouped_stats.columns = [experiment_ids, 'weighted_average_value', 'weighted_std_dev']
+        grouped_stats = (
+            self.df.groupby(experiment_ids)
+            .apply(
+                lambda x: pd.Series(
+                    self.weighted_stats(x[values], x[std_dev], self.num_obs)
+                )
+            )
+            .reset_index()
+        )
+        grouped_stats.columns = [
+            experiment_ids,
+            "weighted_average_value",
+            "weighted_std_dev",
+        ]
         return grouped_stats.reset_index()
 
     @staticmethod
     def weighted_stats(values, std_devs, n):
-        weights = [n / (std ** 2) for std in std_devs]
-        weighted_avg = sum(value * weight for value, weight in zip(values, weights)) / sum(weights)
+        weights = [n / (std**2) for std in std_devs]
+        weighted_avg = sum(
+            value * weight for value, weight in zip(values, weights)
+        ) / sum(weights)
 
         # Calculate the weighted variance.
         weighted_variance = sum(
-            weight * (value - weighted_avg) ** 2 for value, weight in zip(values, weights)) / sum(
-            weights)
+            weight * (value - weighted_avg) ** 2
+            for value, weight in zip(values, weights)
+        ) / sum(weights)
 
         # Calculate the weighted standard deviation.
-        weighted_std_dev = weighted_variance ** 0.5
+        weighted_std_dev = weighted_variance**0.5
 
         return weighted_avg, weighted_std_dev
 
