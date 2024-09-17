@@ -40,7 +40,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_get_averages_easy(self):
         spreadsheet = Spreadsheet(self.excel_filename)
-        averages = spreadsheet._ISpreadsheet__get_averages(tab_name='tab_00')
+        averages = spreadsheet._get_averages(tab_name='tab_00')
         expected = {
             'injection': [1, 2, 3, 4],
             'avg. R (kOhm)': [1848.0, 19.66667, 123.666667, 9.40]
@@ -51,7 +51,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_get_stdevs_easy(self):
         spreadsheet = Spreadsheet(self.excel_filename)
-        stdevs = spreadsheet._ISpreadsheet__get_stdevs(tab_name='tab_00')
+        stdevs = spreadsheet._get_stdevs(tab_name='tab_00')
         expected = {
             'injection': [1, 2, 3, 4],
             'st. dev. R (kOhm)': [10.333333, 0.137000, 1.643333, 0.167667]
@@ -62,7 +62,7 @@ class MyTestCase(unittest.TestCase):
     def test_get_average_tab_name_not_in_sheet(self):
         spreadsheet = Spreadsheet(self.excel_filename)
         with self.assertRaises(ValueError):
-            spreadsheet._ISpreadsheet__get_averages(tab_name='foo')
+            spreadsheet._get_averages(tab_name='foo')
 
     def test_get_num_observations(self):
         spreadsheet = Spreadsheet(self.excel_filename)
