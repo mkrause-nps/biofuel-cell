@@ -10,9 +10,6 @@ class MyTestCase(unittest.TestCase):
     def setUp(self):
         self.excel_filename = os.path.abspath("./data/some_data.xlsx")
 
-    def test_something(self):
-        self.assertEqual(True, True)  # add assertion here
-
     def test_constructor(self):
         spreadsheet = Spreadsheet(self.excel_filename)
         self.assertEqual(f'Spreadsheet instance: {self.excel_filename}', str(spreadsheet))
