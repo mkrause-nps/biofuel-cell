@@ -4,9 +4,13 @@ from abc import ABC, abstractmethod
 
 class ISpreadsheet(ABC):
     @abstractmethod
-    def get_average(self, tab: str='Sheet1') -> float:
+    def get_averages(self, tab: str='Sheet1') -> float:
         pass
 
     @abstractmethod
-    def get_stdev(self, tab: str='Sheet1') -> float:
+    def get_stdevs(self, tab: str='Sheet1') -> float:
+        pass
+
+    @abstractmethod
+    def __str__(self) -> str:
         pass

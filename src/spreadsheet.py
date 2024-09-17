@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
+import os
+from typing import Tuple
+
+import numpy as np
+import pandas as pd
 from src.i_spreadsheet import ISpreadsheet
-from src.utility import _Utility
 
 
 class Spreadsheet(ISpreadsheet):
     def __init__(self, excel_filename: str):
-        if not _Utility.is_absolute_path(excel_filename):
-            raise ValueError(f'"{excel_filename}" is not absolute path')
-        self.__excel_filename = excel_filename
+        self.__excel_filename = os.path.abspath(excel_filename)
+        excel_file = pd.ExcelFile(excel_filename)
+        self.__sheet_names = excel_file.sheet_names
 
     @property
     def excel_filename(self):
@@ -17,11 +21,65 @@ class Spreadsheet(ISpreadsheet):
     def excel_filename(self, excel_filename: str):
         raise AttributeError('excel_filename attribute is read-only')
 
-    def get_average(self, tab: str='Sheet1') -> float:
-        pass
+    @property
+    def sheet_names(self) -> tuple:
+        return tuple(self.__sheet_names)
 
-    def get_stdev(self, tab: str='Sheet1') -> float:
-        pass
+    @sheet_names.setter
+    def sheet_names(self, sheet_names: tuple):
+        raise AttributeError('sheet_names attribute is read-only')
+
+    def get_averages(self, tab_name: str='Sheet1') -> pd.DataFrame:
+        """Return a dataframe containing averages for each experiment in sheet."""
+        if not self.__is_tab_name_in_file(tab_name=tab_name):
+            raise ValueError(f'tab name {tab_name} is not file {self.excel_filename}')
+        df = pd.read_excel(self.__excel_filename, sheet_name=tab_name)
+        column_names = self.__get_column_names(df=df)
+        return df.groupby(column_names[0])[column_names[2]].mean().reset_index()
+
+    def get_stdevs(self, tab_name: str='Sheet1') -> pd.DataFrame:
+        """Return a dataframe containing standard deviations for each experiment in sheet."""
+        if not self.__is_tab_name_in_file(tab_name=tab_name):
+            raise ValueError(f'tab name {tab_name} is not file {self.excel_filename}')
+        df = pd.read_excel(self.__excel_filename, sheet_name=tab_name)
+        column_names = self.__get_column_names(df=df)
+        return df.groupby(column_names[0])[column_names[3]].mean().reset_index()
+
+    def get_num_observations(self, tab_name: str='Sheet1') -> np.ndarray:
+        if not self.__is_tab_name_in_file(tab_name=tab_name):
+            raise ValueError(f'tab name {tab_name} is not file {self.excel_filename}')
+        df = pd.read_excel(self.__excel_filename, sheet_name=tab_name)
+        column_names = self.__get_column_names(df=df)
+        temp_df = df.groupby(column_names[0])[column_names[1]].count().reset_index()
+        return temp_df[column_names[1]].to_numpy()
+
+    def get_average_of_averages(self, tab_name: str='Sheet1') -> Tuple[np.ndarray, np.ndarray]:
+        averages: np.ndarray = self.__get_column_values(df=self.get_averages(tab_name=tab_name))
+        stdevs: np.ndarray = self.__get_column_values(df=self.get_stdevs(tab_name=tab_name))
+
+        num_observations: np.ndarray = self.get_num_observations(tab_name=tab_name)
+
+        weighted_means = self.__get_weighted_mean(averages=averages, num_observations=num_observations)
+        variance = np.sum(num_observations * (stdevs**2 + (averages - weighted_means)**2)) / np.sum(num_observations)
+        std_dev_of_averages = (np.sqrt(variance))
+
+        return weighted_means, std_dev_of_averages
+
+
+    @staticmethod
+    def __get_weighted_mean(averages: np.ndarray, num_observations: np.ndarray) -> np.ndarray:
+        return np.sum(num_observations * averages) / np.sum(num_observations)
+
+    def __get_column_values(self, df: pd.DataFrame) -> np.ndarray:
+        colum_name = self.__get_column_names(df=df)[1]
+        return df[colum_name].to_numpy()
+
+    @staticmethod
+    def __get_column_names(df: pd.DataFrame) -> tuple:
+        return tuple(df.columns)
+
+    def __is_tab_name_in_file(self, tab_name: str) -> bool:
+        return tab_name in self.__sheet_names
 
     def __str__(self):
         return f"Spreadsheet instance: {self.__excel_filename}"
