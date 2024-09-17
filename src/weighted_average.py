@@ -21,7 +21,7 @@ class WeightedAverage(object):
         grouped_stats = self.df.groupby(experiment_ids).apply(
             lambda x: pd.Series(self.weighted_stats(x[values], x[std_dev], self.num_obs))).reset_index()
         grouped_stats.columns = [experiment_ids, 'weighted_average_value', 'weighted_std_dev']
-        return grouped_stats
+        return grouped_stats.reset_index()
 
     @staticmethod
     def weighted_stats(values, std_devs, n):
