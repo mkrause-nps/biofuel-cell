@@ -12,7 +12,7 @@ class Spreadsheet(ISpreadsheet):
 
     def __init__(self, excel_filename: str):
         self.__excel_filename = os.path.abspath(excel_filename)
-        excel_file = pd.ExcelFile(excel_filename)
+        excel_file = pd.ExcelFile(self.__excel_filename)
         self.__sheet_names = excel_file.sheet_names
 
     @property
@@ -39,19 +39,8 @@ class Spreadsheet(ISpreadsheet):
         num_rows = df.shape[0]
         return np.array([self.NUMBER_OF_SAMPLES] * num_rows)
 
-    # def get_average_of_averages(self, tab_name: str='Sheet1') -> Tuple[float, float]:
-    #     averages: np.ndarray = self.__get_column_values(df=self._get_averages(tab_name=tab_name))
-    #     stdevs: np.ndarray = self.__get_column_values(df=self._get_stdevs(tab_name=tab_name))
-    #     num_observations: np.ndarray = self.get_num_observations(tab_name=tab_name)
-    #
-    #     weighted_means = self.__get_weighted_mean(averages=averages, num_observations=num_observations)
-    #     variance = np.sum(num_observations * (stdevs**2 + (averages - weighted_means)**2)) / np.sum(num_observations)
-    #     std_dev_of_averages = (np.sqrt(variance))
-    #
-    #     return weighted_means.item(), std_dev_of_averages.item()
-
-    # def get_weighted_averages(self):
-    #     weighted_averages = WeightedAverage
+    def get_dataframe(self, tab_name: str='Sheet1') -> pd.DataFrame:
+        return pd.read_excel(self.__excel_filename, sheet_name=tab_name)
 
     def _get_averages(self, tab_name: str= 'Sheet1') -> pd.DataFrame:
         """Return a dataframe containing averages for each experiment in sheet."""
