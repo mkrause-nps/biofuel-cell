@@ -7,6 +7,9 @@ from src.i_spreadsheet import ISpreadsheet
 
 
 class Spreadsheet(ISpreadsheet):
+
+    NUMBER_OF_SAMPLES: int = 100
+
     def __init__(self, excel_filename: str):
         self.__excel_filename = os.path.abspath(excel_filename)
         excel_file = pd.ExcelFile(excel_filename)
@@ -51,6 +54,7 @@ class Spreadsheet(ISpreadsheet):
         column_names = self.__get_column_names(df=df)
         temp_df = df.groupby(column_names[0])[column_names[1]].count().reset_index()
         return temp_df[column_names[1]].to_numpy()
+        # return np.array([100] * 3)   # that's all we need here, figure out how to get to the 3
 
     def get_average_of_averages(self, tab_name: str='Sheet1') -> Tuple[float, float]:
         averages: np.ndarray = self.__get_column_values(df=self._ISpreadsheet__get_averages(tab_name=tab_name))
