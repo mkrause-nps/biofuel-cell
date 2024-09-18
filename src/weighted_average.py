@@ -14,9 +14,12 @@ class WeightedAverage(object):
         self.num_obs: int = num_obs
 
     def get_weighted_average(self) -> pd.DataFrame:
+        """Return weighted average and standard deviation."""
         experiment_ids: str = self.column_names[0]
         values: str = self.column_names[2]
         std_dev: str = self.column_names[3]
+        # Group by experiment IDs to compute the weighted statistics and
+        # drop all rows that contain NaNs in the output.
         grouped_stats = (
             self.df.groupby(experiment_ids)
             .apply(
@@ -25,16 +28,18 @@ class WeightedAverage(object):
                 )
             )
             .reset_index()
+            .dropna()
         )
         grouped_stats.columns = [
             experiment_ids,
             "weighted_average_value",
             "weighted_std_dev",
         ]
-        return grouped_stats.reset_index()
+        return grouped_stats
 
     @staticmethod
     def weighted_stats(values, std_devs, n):
+        """Return weighted average and standard deviation from an average of averages."""
         weights = [n / (std**2) for std in std_devs]
         weighted_avg = sum(
             value * weight for value, weight in zip(values, weights)
@@ -42,7 +47,7 @@ class WeightedAverage(object):
 
         # Calculate the weighted variance.
         weighted_variance = sum(
-            weight * (value - weighted_avg) ** 2
+            weight * (value - weighted_avg)**2
             for value, weight in zip(values, weights)
         ) / sum(weights)
 
