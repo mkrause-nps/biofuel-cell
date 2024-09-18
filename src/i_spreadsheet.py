@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from abc import ABC, abstractmethod
-from typing import Tuple
 import numpy as np
+import pandas as pd
 
 
 class ISpreadsheet(ABC):
@@ -10,7 +10,11 @@ class ISpreadsheet(ABC):
         pass
 
     @abstractmethod
-    def _get_averages(self, tab: str = "Sheet1") -> float:
+    def get_dataframe(self, tab_name: str = "Sheet1") -> pd.DataFrame:
+        pass
+
+    @abstractmethod
+    def _get_averages(self, tab_name: str = "Sheet1") -> float:
         pass
 
     @abstractmethod
