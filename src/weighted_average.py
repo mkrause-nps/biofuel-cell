@@ -47,7 +47,7 @@ class WeightedAverage(object):
 
         # Calculate the weighted variance.
         weighted_variance = sum(
-            weight * (value - weighted_avg)**2
+            weight * (value - weighted_avg) ** 2
             for value, weight in zip(values, weights)
         ) / sum(weights)
 
