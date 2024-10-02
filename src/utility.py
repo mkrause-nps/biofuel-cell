@@ -3,6 +3,7 @@ import configparser
 import os
 from pathlib import Path
 import pandas as pd
+from matplotlib import pyplot as plt
 
 
 class _Utility(object):
@@ -31,6 +32,10 @@ class _Utility(object):
         columns: pd.DataFrame.columns,
     ) -> pd.DataFrame:
         return columns.str.replace("%", "percent_")
+
+    @staticmethod
+    def matplotlib_render_latex() -> None:
+        plt.rcParams['text.usetex'] = True
 
     @staticmethod
     def remove_outliers(group: pd.Series, dataset_name: str) -> pd.Series:
