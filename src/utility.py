@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import configparser
 import os
+import csv
 from pathlib import Path
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -35,7 +36,7 @@ class _Utility(object):
 
     @staticmethod
     def matplotlib_render_latex() -> None:
-        plt.rcParams['text.usetex'] = True
+        plt.rcParams["text.usetex"] = True
 
     @staticmethod
     def remove_outliers(group: pd.Series, dataset_name: str) -> pd.Series:
@@ -52,8 +53,12 @@ class _Utility(object):
         return group[~outliers]
 
     @staticmethod
-    def get_filename_only(filename: str) -> str:
-        return filename.split(".")[0]
+    def get_filename_only(filename: str, is_filename_only: bool = False) -> str:
+        """Return absolute path of filename without extension, unless is_filename_only is set."""
+        filename_path = filename.split(".")[0]
+        if is_filename_only:
+            return filename_path.split("/")[-1]
+        return filename_path
 
     @staticmethod
     def put_value_in_row(
@@ -67,6 +72,24 @@ class _Utility(object):
         if row[condition_column_name] != condition:
             return alt_value
         return value
+
+    @staticmethod
+    def write_row_to_csv_file(csv_filename: str, data: list[dict]):
+        """Write one record per line to a CSV file."""
+        if len(data) == 0:
+            msg = f"data is empty."
+            raise IndexError(msg)
+        fieldnames = list(data[0].keys())
+        with open(csv_filename, "a", newline="") as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+            # Write the header only if the file is empty.
+            if csvfile.tell() == 0:
+                writer.writeheader()
+
+            # Write the data rows.
+            for row in data:
+                writer.writerow(row)
 
     @staticmethod
     def is_absolute_path(path: str) -> bool:
