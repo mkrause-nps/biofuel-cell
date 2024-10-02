@@ -2,8 +2,6 @@
 import os
 import numpy as np
 from matplotlib import pyplot as plt
-from matplotlib.figure import Figure
-
 from src.utility import _Utility
 from src.spreadsheet import Spreadsheet
 from src.weighted_average import WeightedAverage
