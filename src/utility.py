@@ -79,7 +79,7 @@ class _Utility(object):
         if len(data) == 0:
             msg = f"data is empty."
             raise IndexError(msg)
-        fieldnames = list(data[0].keys())
+        fieldnames = list(dict(sorted(data[0].items())))  # list(data[0].keys())  # sort by keys
         with open(csv_filename, "a", newline="") as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
