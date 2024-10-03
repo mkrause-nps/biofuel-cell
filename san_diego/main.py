@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 import os
-from typing import List
-
 import numpy as np
 from matplotlib import pyplot as plt
 from src.utility import _Utility
 from src.spreadsheet import Spreadsheet
 from src.weighted_average import WeightedAverage
 import logging
-import csv
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
