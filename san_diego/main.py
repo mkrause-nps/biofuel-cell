@@ -112,8 +112,8 @@ def main():
 
 
 def _write_to_csv_file(csv_filename: str, chipID: str, data: list[dict]) -> None:
-    logger.info(f"Writing data to {csv_filename}")
     csv_filename = f"{_Utility.get_filename_only(csv_filename)}.csv"
+    logger.info(f"Writing data to {csv_filename}")
     data[0]["chipID"] = chipID
     _Utility.write_row_to_csv_file(csv_filename=csv_filename, data=data)
 
