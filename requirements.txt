@@ -7,3 +7,4 @@ seaborn==0.13.2
 scikit-learn==1.5.1
 pytest==8.3.3
 numpy==2.0.0
+mk_tools==0.2.0
